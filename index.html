@@ -1,0 +1,575 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>حاسبة المعدل التراكمي GPA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script>
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && (event.key === 'c' || event.key === 'v' || event.key === 'x')) {
+            event.preventDefault();
+        }
+    });
+</script>
+<script>
+   
+    document.addEventListener('keydown', function(event) {
+       
+        const blockedKeys = [
+            'F12',
+            'F5',  
+            's',  
+            'u',   
+            'i',  
+            'c',   
+            'v',  
+            'x'    
+        ];
+
+        
+        if (
+            event.ctrlKey || 
+            event.shiftKey || 
+            event.altKey || 
+            blockedKeys.includes(event.key)
+        ) {
+            event.preventDefault();
+            alert('عذرًا، تم تعطيل هذا الاختصار.');
+        }
+    });
+</script>
+<script>
+  document.addEventListener('contextmenu', function(event) {
+      event.preventDefault();
+  });
+</script>
+<script>
+    
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === 's') {
+            event.preventDefault();
+            alert('عذرًا، تم تعطيل هذا الاختصار.');
+        }
+    });
+</script>
+<style>
+  body {
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+  }
+</style>
+<script>
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === 'u') {
+            event.preventDefault();
+            alert('عذرًا، تم تعطيل هذا الاختصار.');
+        }
+    });
+</script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #1E191A;
+      color: #FFFFFF;
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    header {
+      background: #00A74F;
+      color: #FFFFFF;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    header i {
+      margin-left: 10px;
+    }
+    .container {
+      max-width: 800px;
+      width: 90%;
+      background: #FFFFFF;
+      color: #1E191A;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin-top: 80px;
+    }
+    h1 {
+      font-size: 2rem;
+      color: #00A74F;
+      margin-bottom: 20px;
+    }
+    .student-info {
+      font-size: 14px;
+      color: #7f8c8d;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 500;
+      color: #1E191A;
+      position: relative;
+    }
+    label i {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #00A74F;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px 35px;
+      margin-top: 8px;
+      border: 1px solid #bdc3c7;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+      background: #FFFFFF;
+      color: #1E191A;
+    }
+    input:focus, select:focus {
+      border-color: #00A74F;
+      outline: none;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #00A74F;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    button:hover {
+      background: #EE161F;
+      transform: scale(1.05);
+    }
+    .hidden {
+      display: none;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      background: #F9F9F9;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: right;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    table th {
+      background: #00A74F;
+      color: #FFFFFF;
+    }
+    table tr:nth-child(even) {
+      background: #F9F9F9;
+    }
+    table tr:hover {
+      background: #EAEAEA;
+    }
+    p {
+      font-size: 16px;
+      margin: 10px 0;
+      color: #1E191A;
+    }
+    .gpa-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: #EE161F;
+    }
+    .category {
+      font-size: 18px;
+      color: #EE161F;
+    }
+    @media (max-width: 768px) {
+      header {
+        font-size: 1.2rem;
+      }
+      .container {
+        padding: 20px;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <i class="fas fa-calculator"></i> حاسبة المعدل التراكمي GPA
+</header>
+<div class="container">
+  <h1>حاسبة المعدل التراكمي GPA</h1>
+  <div class="student-info">
+    تصميم الطالب: عبدالهادي وحيد عبدالفتاح جبرين<br>
+    الجامعة الأردنية<br>
+    قسم نظم المعلومات الإدارية
+  </div>
+
+  <label for="isFirstSemester"><i class="fas fa-calendar-alt"></i> هل هذا فصلك الأول؟</label>
+  <select id="isFirstSemester">
+    <option value="yes" selected>نعم</option>
+    <option value="no">لا</option>
+  </select>
+
+  <div id="previousDataSection" class="hidden">
+    <label for="previousGPA"><i class="fas fa-chart-line"></i> المعدل التراكمي الحالي:</label>
+    <input type="number" id="previousGPA" step="0.01" min="0.5" max="4.0" placeholder="أدخل المعدل التراكمي">
+
+    <label for="previousHours"><i class="fas fa-clock"></i> عدد الساعات المنجزة:</label>
+    <input type="number" id="previousHours" min="1" placeholder="أدخل عدد الساعات">
+  </div>
+
+  <label for="courseCount"><i class="fas fa-book"></i> عدد المواد:</label>
+  <select id="courseCount">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4" selected>4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+  </select>
+
+  <div id="coursesContainer"></div>
+
+  <button id="calculateButton">احسب المعدل</button>
+  <button id="resetButton" class="hidden">حساب معدل جديد</button>
+
+  <div id="resultSection" class="hidden result"></div>
+</div>
+
+<script>
+  const gradePoints = {
+    'A': 4.00,
+    '-A': 3.75,
+    '+B': 3.50,
+    'B': 3.00,
+    '-B': 2.75,
+    '+C': 2.50,
+    'C': 2.00,
+    '-C': 1.75,
+    '+D': 1.50,
+    'D': 1.25,
+    '-D': 1.00,
+    'F': 0.50
+  };
+
+  const isFirstSemesterSelect = document.getElementById('isFirstSemester');
+  const previousDataSection = document.getElementById('previousDataSection');
+  const courseCountSelect = document.getElementById('courseCount');
+  const coursesContainer = document.getElementById('coursesContainer');
+  const calculateButton = document.getElementById('calculateButton');
+  const resetButton = document.getElementById('resetButton');
+  const resultSection = document.getElementById('resultSection');
+
+  let courses = [];
+
+  function updateCoursesUI() {
+    const count = parseInt(courseCountSelect.value);
+    coursesContainer.innerHTML = '';
+    courses = [];
+
+    for (let i = 1; i <= count; i++) {
+      const courseDiv = document.createElement('div');
+      courseDiv.innerHTML = `
+        <h3>المادة ${i}</h3>
+        <label><i class="fas fa-tag"></i> رمز المادة:</label>
+        <select class="course-code">
+          <option value="A">A</option>
+          <option value="-A">-A</option>
+          <option value="+B">+B</option>
+          <option value="B">B</option>
+          <option value="-B">-B</option>
+          <option value="+C">+C</option>
+          <option value="C">C</option>
+          <option value="-C">-C</option>
+          <option value="+D">+D</option>
+          <option value="D">D</option>
+          <option value="-D">-D</option>
+          <option value="F">F</option>
+        </select>
+
+        <label><i class="fas fa-clock"></i> عدد الساعات:</label>
+        <select class="course-hours">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+
+        <div class="repeated-course hidden">
+          <label><i class="fas fa-redo-alt"></i> هل المادة معادة؟</label>
+          <select class="course-repeated">
+            <option value="no">لا</option>
+            <option value="yes">نعم</option>
+          </select>
+
+          <div class="old-course hidden">
+            <label><i class="fas fa-tag"></i> رمز المادة القديمة:</label>
+            <select class="old-course-code">
+              <option value="+C">+C</option>
+              <option value="C">C</option>
+              <option value="-C">-C</option>
+              <option value="+D">+D</option>
+              <option value="D">D</option>
+              <option value="-D">-D</option>
+              <option value="F">F</option>
+            </select>
+          </div>
+        </div>
+      `;
+      coursesContainer.appendChild(courseDiv);
+
+      const repeatedDiv = courseDiv.querySelector('.repeated-course');
+      const repeatedSelect = courseDiv.querySelector('.course-repeated');
+      const oldCourseDiv = courseDiv.querySelector('.old-course');
+
+      repeatedSelect.addEventListener('change', () => {
+        if (repeatedSelect.value === 'yes') {
+          oldCourseDiv.classList.remove('hidden');
+        } else {
+          oldCourseDiv.classList.add('hidden');
+        }
+      });
+
+      courses.push({
+        code: courseDiv.querySelector('.course-code'),
+        hours: courseDiv.querySelector('.course-hours'),
+        repeated: repeatedSelect,
+        oldCode: courseDiv.querySelector('.old-course-code')
+      });
+    }
+
+    toggleRepeatedOptions();
+  }
+
+  function toggleRepeatedOptions() {
+    const isFirstSemester = isFirstSemesterSelect.value === 'yes';
+    const repeatedDivs = document.querySelectorAll('.repeated-course');
+
+    repeatedDivs.forEach(div => {
+      if (isFirstSemester) {
+        div.classList.add('hidden');
+      } else {
+        div.classList.remove('hidden');
+      }
+    });
+  }
+
+  function calculateGPA() {
+    const isFirstSemester = isFirstSemesterSelect.value === 'yes';
+    let previousGPA = parseFloat(document.getElementById('previousGPA').value) || 0;
+    let previousHours = parseInt(document.getElementById('previousHours').value) || 0;
+
+    if (isFirstSemester) {
+      previousGPA = 0;
+      previousHours = 0;
+    } else {
+      if (isNaN(previousGPA) || previousGPA < 0.5 || previousGPA > 4.0) {
+        alert('يرجى إدخال معدل تراكمي صحيح بين 0.5 و 4.0.');
+        return;
+      }
+
+      if (isNaN(previousHours) || previousHours <= 0) {
+        alert('يرجى إدخال عدد ساعات منجزة صحيح أكبر من صفر.');
+        return;
+      }
+    }
+
+    let totalPoints = previousGPA * previousHours;
+    let totalHours = previousHours;
+
+    const newCourses = [];
+
+    for (const course of courses) {
+      const hours = parseInt(course.hours.value);
+      const grade = course.code.value;
+      const repeated = course.repeated.value === 'yes';
+      const oldCode = course.oldCode.value;
+
+      if (isNaN(hours) || hours <= 0) {
+        alert('يرجى إدخال عدد ساعات صحيح لكل مادة.');
+        return;
+      }
+
+      const gradeValue = gradePoints[grade];
+
+      if (repeated) {
+        if (gradeValue > gradePoints[oldCode]) {
+          totalHours -= hours;
+          totalPoints -= gradePoints[oldCode] * hours;
+        } else {
+          continue;
+        }
+      }
+
+      totalHours += hours;
+      totalPoints += gradeValue * hours;
+
+      newCourses.push({
+        code: grade,
+        hours: hours,
+        gradeValue: gradeValue,
+        oldCode: repeated ? oldCode : ''
+      });
+    }
+
+    const newGPA = totalPoints / totalHours;
+
+    displayResult(newGPA, totalHours, newCourses, previousGPA, previousHours);
+    resetButton.classList.remove('hidden');
+  }
+
+  function displayResult(newGPA, totalHours, newCourses, previousGPA, previousHours) {
+    const gpaCategory = getGPACategory(newGPA);
+
+    let resultHTML = `
+      <h2>نتائج الحساب</h2>
+      <p><strong>المعدل التراكمي الجديد:</strong> <span class="gpa-value">${newGPA.toFixed(2)}</span></p>
+      <p><strong>التقدير:</strong> <span class="category">${gpaCategory}</span></p>
+      <p><strong>إجمالي الساعات المنجزة:</strong> ${totalHours}</p>
+      <table>
+        <thead>
+          <tr>
+            <th>رمز المادة</th>
+            <th>رمز المادة القديمة</th>
+            <th>عدد الساعات</th>
+            <th>علامة المادة</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    newCourses.forEach(course => {
+      resultHTML += `
+        <tr>
+          <td>${course.code}</td>
+          <td>${course.oldCode || '-'}</td>
+          <td>${course.hours}</td>
+          <td>${course.gradeValue.toFixed(2)}</td>
+        </tr>
+      `;
+    });
+
+    resultHTML += `
+        </tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>المعدل التراكمي القديم</th>
+            <th>عدد الساعات المنجزة القديمة</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${previousGPA.toFixed(2)}</td>
+            <td>${previousHours}</td>
+          </tr>
+        </tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>المعدل التراكمي الجديد</th>
+            <th>عدد الساعات المنجزة الجديدة</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${newGPA.toFixed(2)}</td>
+            <td>${totalHours}</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+
+    resultSection.innerHTML = resultHTML;
+    resultSection.classList.remove('hidden');
+  }
+
+  function getGPACategory(gpa) {
+    if (gpa >= 3.65 && gpa <= 4.00) return 'امتياز';
+    if (gpa >= 3.00 && gpa <= 3.64) return 'جيد جداً';
+    if (gpa >= 2.50 && gpa <= 2.99) return 'جيد';
+    if (gpa >= 2.00 && gpa <= 2.49) return 'مقبول';
+    return 'ضعيف';
+  }
+
+  function resetForm() {
+    isFirstSemesterSelect.value = 'yes';
+    previousDataSection.classList.add('hidden');
+    document.getElementById('previousGPA').value = '';
+    document.getElementById('previousHours').value = '';
+    courseCountSelect.value = '4';
+    updateCoursesUI();
+    resultSection.classList.add('hidden');
+    resetButton.classList.add('hidden');
+  }
+
+  isFirstSemesterSelect.addEventListener('change', () => {
+    if (isFirstSemesterSelect.value === 'yes') {
+      previousDataSection.classList.add('hidden');
+    } else {
+      previousDataSection.classList.remove('hidden');
+    }
+    toggleRepeatedOptions();
+  });
+
+  courseCountSelect.addEventListener('change', updateCoursesUI);
+
+  calculateButton.addEventListener('click', calculateGPA);
+  resetButton.addEventListener('click', resetForm);
+
+  updateCoursesUI();
+</script>
+</body>
+</html>
